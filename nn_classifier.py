@@ -21,6 +21,9 @@ from collections import defaultdict
 from batch_gen import batch_gen
 from my_tokenizer import glove_tokenize
 import xgboost as xgb
+import ast
+import h5py
+import pickle
 
 ### Preparing the text data
 texts = []  # list of text samples
@@ -41,21 +44,23 @@ print('Found %s texts. (samples)' % len(texts))
 # logistic, gradient_boosting, random_forest, svm, tfidf_svm_linear, tfidf_svm_rbf
 model_count = 2
 word_embed_size = 200
-GLOVE_MODEL_FILE = str(sys.argv[1])
-EMBEDDING_DIM = int(sys.argv[2])
-MODEL_TYPE=sys.argv[3]
+GLOVE_MODEL_FILE = "glove_embeddings/glove.twitter.27B.200d.txt"
+EMBEDDING_DIM = 200
+MODEL_TYPE=sys.argv[1]
 print 'Embedding Dimension: %d' %(EMBEDDING_DIM)
 print 'GloVe Embedding: %s' %(GLOVE_MODEL_FILE)
 
-word2vec_model1 = np.load('fast_text.npy')
-word2vec_model1 = word2vec_model1.reshape((word2vec_model1.shape[1], word2vec_model1.shape[2]))
-f_vocab = open('vocab_fast_text', 'r')
-vocab = json.load(f_vocab)
-word2vec_model = {}
-for k,v in vocab.iteritems():
-word2vec_model[k] = word2vec_model1[int(v)]
-del word2vec_model1
 
+#Load model
+word2vec_model = pickle.load(open("fast_text.p","r"))
+print len(word2vec_model)
+#Load vocab
+f_vocab = open("vocab_ft.txt", "r")
+vocab_json = ast.literal_eval(f_vocab.read())
+# word2vec_model1 = np.load('fast_text.npy')
+# word2vec_model1 = word2vec_model1.reshape((word2vec_model1.shape[1], word2vec_model1.shape[2]))
+# f_vocab = open('vocab_fast_text', 'r')
+# vocab = json.load(f_vocab)
 
 SEED=42
 MAX_NB_WORDS = None
@@ -76,9 +81,11 @@ def select_tweets_whose_embedding_exists():
     tweet_return = []
     for tweet in tweets:
         _emb = 0
-        words = glove_tokenize(tweet['text'])
+        # words = glove_tokenize(tweet['text'])
+        text = tweet['text'].encode("utf-8")
+        words = glove_tokenize(text)
         for w in words:
-            if w in word2vec_model:  # Check if embeeding there in GLove model
+            if w in vocab_json:  # Check if embeeding there in GLove model
                 _emb+=1
         if _emb:   # Not a blank tweet
             tweet_return.append(tweet)
@@ -96,7 +103,9 @@ def gen_data():
 
     X, y = [], []
     for tweet in tweets:
-        words = glove_tokenize(tweet['text'])
+        text = tweet['text'].encode("utf-8")
+        words = glove_tokenize(text)
+        # words = glove_tokenize(tweet['text'])
         emb = np.zeros(word_embed_size)
         for word in words:
             try:
@@ -149,8 +158,6 @@ def classification_model(X, Y, model_type="logistic"):
     scores3 = cross_val_score(get_model(model_type), X, Y, cv=NO_OF_FOLDS, scoring='f1_weighted')
     print "F1-score(avg): %0.3f (+/- %0.3f)" % (scores3.mean(), scores3.std() * 2)
 
-    pdb.set_trace()
-
 
 
 if __name__ == "__main__":
@@ -161,6 +168,3 @@ if __name__ == "__main__":
     X, Y = gen_data()
 
     classification_model(X, Y, MODEL_TYPE)
-    pdb.set_trace()
-
-

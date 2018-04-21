@@ -21,6 +21,8 @@ from batch_gen import batch_gen
 from string import punctuation
 from get_similar_words import get_similar_words
 import sys
+import h5py
+import pickle
 
 ### Preparing the text data
 texts = []  # list of text samples
@@ -45,11 +47,11 @@ np.random.seed(42)
 
 
 # PINKESH files
-GLOVE_MODEL_FILE="glove_embeddings/glove.twitter.27B.200d.txt"
+GLOVE_MODEL_FILE="glove_embeddings/glove.twitter.27B.25d.txt"
 NO_OF_CLASSES=3
 
 MAX_NB_WORDS = None
-VALIDATION_SPLIT = 0.2
+VALIDATION_SPLIT = 0.1
 word2vec_model = gensim.models.KeyedVectors.load_word2vec_format(GLOVE_MODEL_FILE)
 
 
@@ -165,7 +167,7 @@ def shuffle_weights(model):
 
 def fast_text_model(sequence_length):
     model = Sequential()
-    model.add(Embedding(len(vocab)+1, EMBEDDING_DIM, input_length=sequence_length))
+    model.add(Embedding(len(vocab)+1, EMBEDDING_DIM, input_length=sequence_length, trainable=True))
     #model.add(Embedding(len(vocab)+1, EMBEDDING_DIM, input_length=sequence_length, trainable=False))
     model.add(Dropout(0.5))
     model.add(GlobalAveragePooling1D())
@@ -203,7 +205,6 @@ def train_fasttext(X, y, model, inp_dim,embedding_weights, epochs=10, batch_size
                     print e
                 #print x.shape, y.shape
                 loss, acc = model.train_on_batch(x, y_temp)#, class_weight=class_weights)
-                print loss, acc
         #pdb.set_trace()
         lookup_table += model.layers[0].get_weights()[0]
         y_pred = model.predict_on_batch(X_test)
@@ -232,7 +233,7 @@ def train_fasttext(X, y, model, inp_dim,embedding_weights, epochs=10, batch_size
 
 def check_semantic_sim(embedding_table, word):
     reverse_vocab = {v:k for k,v in vocab.iteritems()}
-    sim_word_idx = get_similar_words(embedding_table, embedding_table[vocab[word]], 200)
+    sim_word_idx = get_similar_words(embedding_table, embedding_table[vocab[word]].reshape(1,-1), 25)
     sim_words = map(lambda x:reverse_vocab[x[1]], sim_word_idx)
     print sim_words
 
@@ -266,6 +267,22 @@ if __name__ == "__main__":
     
     #check_semantic_sim(table)
     tryWord(table)
-    pdb.set_trace()
 
+    # dct = {}
+    # for key,value in vocab.items() :
+    #     dct[key] = table[value]
 
+    # pickle.dump(dct,open("fast_text.p","w"))
+
+    # # #To store the model
+    # # model.save("fast_text.h5")
+
+    # # #To store vocab
+    # outfile = open("vocab_ft.txt", 'w')
+    # outfile.write(str(vocab))
+    # outfile.close()
+
+    # #Open model
+    # f = h5py.File('fast_text.h5', 'r')
+    # data = f['model_weights']['embedding_1']['embedding_1']['embeddings:0'][:]
+    # np.save("fast_text.npy", data)

@@ -21,7 +21,7 @@ import sys
 
 from nltk import tokenize as tokenize_nltk
 from my_tokenizer import glove_tokenize
-
+import pickle
 
 
 ### Preparing the text data
@@ -290,4 +290,13 @@ if __name__ == "__main__":
     #model = lstm_model(data.shape[1], 25, get_embedding_weights())
     train_LSTM(data, y, model, EMBEDDING_DIM, W)
 
-    pdb.set_trace()
+    table = model.layers[0].get_weights()[0]
+    dct = {}
+    for key,value in vocab.items() :
+        dct[key] = table[value]
+
+    pickle.dump(dct,open("lstm.p","w"))
+
+    outfile = open("vocab_lstm.txt", 'w')
+    outfile.write(str(vocab))
+    outfile.close()

@@ -67,15 +67,15 @@ def get_model(m_type=None):
         return None
 
     if m_type == "tfidf_svm":
-        logreg = SVC(class_weight=CLASS_WEIGHT, kernel=KERNEL)
+        logreg = SVC()
     elif m_type == "tfidf_svm_linear":
-        logreg = LinearSVC(C=0.01, loss=LOSS_FUN, class_weight=CLASS_WEIGHT)
+        logreg = LinearSVC(C=0.01)
     elif m_type == 'tfidf_logistic':
         logreg = LogisticRegression()
     elif m_type == "tfidf_gradient_boosting":
-        logreg = GradientBoostingClassifier(loss=LOSS_FUN, n_estimators=N_ESTIMATORS)
+        logreg = GradientBoostingClassifier()
     elif m_type == "tfidf_random_forest":
-        logreg = RandomForestClassifier(class_weight=CLASS_WEIGHT, n_estimators=N_ESTIMATORS)
+        logreg = RandomForestClassifier()
         print "ERROR: Please specify a correct model"
         return None
 

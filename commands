@@ -1,4 +1,4 @@
-python BoWV.py -m logistic -f glove_embeddings/glove.twitter.27B.200d.txt --tokenizer glove -d 200 --estimator 1
+python BoWV.py -m logistic -f glove_embeddings/glove.twitter.27B.25d.txt --tokenizer glove -d 25 --estimator 1
 Precision(avg): 0.796 (+/- 0.018)
 Recall(avg): 0.801 (+/- 0.015)
 F1-score(avg): 0.790 (+/- 0.016)
@@ -9,3 +9,4 @@ Precision(avg): 0.792 (+/- 0.022)
 Recall(avg): 0.746 (+/- 0.005)
 F1-score(avg): 0.679 (+/- 0.008)
 
+python lstm.py -f glove_embeddings/glove.twitter.27B.25d.txt -d 25 --tokenizer glove --loss categorical_crossentropy --optimizer adam --initialize-weights random --learn-embeddings --epochs 10 --batch-size 512 --folds 1

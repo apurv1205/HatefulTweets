@@ -99,13 +99,13 @@ def get_model(m_type=None):
     if m_type == 'logistic':
         logreg = LogisticRegression()
     elif m_type == "gradient_boosting":
-        logreg = GradientBoostingClassifier(loss=LOSS_FUN, n_estimators=N_ESTIMATORS)
+        logreg = GradientBoostingClassifier()
     elif m_type == "random_forest":
-        logreg = RandomForestClassifier(class_weight=CLASS_WEIGHT, n_estimators=N_ESTIMATORS)
+        logreg = RandomForestClassifier()
     elif m_type == "svm":
-        logreg = SVC(class_weight=CLASS_WEIGHT, kernel=KERNEL)
+        logreg = SVC()
     elif m_type == "svm_linear":
-        logreg = LinearSVC(loss=LOSS_FUN, class_weight=CLASS_WEIGHT)
+        logreg = LinearSVC()
     else:
         print "ERROR: Please specify a correct model"
         return None

@@ -19,7 +19,7 @@ import gensim, sklearn
 from collections import defaultdict
 from batch_gen import batch_gen
 import sys
-
+import pickle
 from nltk import tokenize as tokenize_nltk
 from my_tokenizer import glove_tokenize
 
@@ -234,15 +234,10 @@ def train_CNN(X, y, inp_dim, model, weights, epochs=EPOCHS, batch_size=BATCH_SIZ
                     class_weights[2] = np.where(y_temp == 2)[0].shape[0]/float(len(y_temp))
 
                 try:
-                    y_temp1 = np.zeros((len(y_temp,3)))
-                    for i in range(len(y_temp)):
-                        y_temp1[i,y_temp[i]] = 1.0
-                    #y_temp = np_utils.to_categorical(y_temp, nb_classes=3)
-                    y_temp = y_temp1
+                    y_temp = np_utils.to_categorical(y_temp, num_classes=3)
                 except Exception as e:
                     print e
                     print y_temp
-                print x.shape, y_temp.shape
                 loss, acc = model.train_on_batch(x, y_temp, class_weight=class_weights)
                 print loss, acc
         y_pred = model.predict_on_batch(X_test)
@@ -327,6 +322,13 @@ if __name__ == "__main__":
     model = cnn_model(data.shape[1], EMBEDDING_DIM)
     train_CNN(data, y, EMBEDDING_DIM, model, W)
 
-    pdb.set_trace()
+    table = model.layers[0].get_weights()[0]
+    dct = {}
+    for key,value in vocab.items() :
+        dct[key] = table[value]
 
+    pickle.dump(dct,open("cnn.p","w"))
 
+    outfile = open("vocab_cnn.txt", 'w')
+    outfile.write(str(vocab))
+    outfile.close()
