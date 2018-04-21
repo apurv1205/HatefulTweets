@@ -41,6 +41,7 @@ usage: BoWV.py [-h] -m [Deprecated]
                [--kernel KERNEL] [--class_weight CLASS_WEIGHT]
 
 BagOfWords model for twitter Hate speech detection
+```
 
 - TF-IDF based models - **tfidf.py**
 ```
@@ -50,8 +51,6 @@ usage: tfidf.py [-h] -m
                 [--folds FOLDS] [--estimators ESTIMATORS] [--loss LOSS]
                 [--kernel KERNEL] [--class_weight CLASS_WEIGHT]
                 [--use-inverse-doc-freq]
-
-TF-IDF model for twitter Hate speech detection
 ```
 
 - LSTM(RNN) based methods - **lstm.py**
@@ -61,8 +60,6 @@ usage: lstm.py [-h] -f EMBEDDINGFILE -d DIMENSION --tokenizer {glove,nltk}
                BATCH_SIZE [-s SEED] [--folds FOLDS] [--kernel KERNEL]
                [--class_weight CLASS_WEIGHT] --initialize-weights
                {random,glove} [--learn-embeddings] [--scale-loss-function]
-
-LSTM based models for twitter Hate speech detection
 ```
 
 - CNN based models - **cnn.py**
@@ -72,8 +69,6 @@ usage: cnn.py [-h] -f EMBEDDINGFILE -d DIMENSION --tokenizer {glove,nltk}
               BATCH_SIZE [-s SEED] [--folds FOLDS]
               [--class_weight CLASS_WEIGHT] --initialize-weights
               {random,glove} [--learn-embeddings] [--scale-loss-function]
-
-CNN based models for twitter Hate speech detection
 ```
 
 
@@ -84,5 +79,4 @@ python BoWV.py --model logistic --seed 42 -f glove.twitter.27b.25d.txt -d 25 --s
 python tfidf.py -m tfidf_svm_linear --max_ngram 3 --tokenizer glove --loss squared_hinge
 python lstm.py -f ~/DATASETS/glove-twitter/GENSIM.glove.twitter.27B.25d.txt -d 25 --tokenizer glove --loss categorical_crossentropy --optimizer adam --initialize-weights random --learn-embeddings --epochs 10 --batch-size 512
 python cnn.py -f ~/DATASETS/glove-twitter/GENSIM.glove.twitter.27B.25d.txt -d 25 --tokenizer nltk --loss categorical_crossentropy --optimizer adam --epochs 10 --batch-size 128 --initialize-weights random --scale-loss-function
-
 ```
