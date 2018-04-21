@@ -8,9 +8,6 @@ Dataset can be downloaded from [https://github.com/zeerakw/hatespeech](https://g
 
 Tweets are labelled as either Racist, Sexist or Neither Racist or Sexist. 
 
-Use your favourite tweet crawler and download the data and place the tweets in the folder 'tweet_data'.
-
-
 ## Requirements
 * Keras 
 * Tensorflow or Theano (we experimented with theano)
@@ -22,7 +19,6 @@ Use your favourite tweet crawler and download the data and place the tweets in t
 
 ## Instructions to run
 
-Before running the model, make sure you have setup the input dataset in a folder named `tweet_data`.   
 To run a model for training, use the following instructions mentioned below. Use appropriate parameter settings to test the variations of the models.
 
 
@@ -46,20 +42,6 @@ usage: BoWV.py [-h] -m [Deprecated]
 
 BagOfWords model for twitter Hate speech detection
 
-optional arguments:
-  -h, --help            show this help message and exit
-  -m {logistic,gradient_boosting,random_forest,svm,svm_linear}, --model {logistic,gradient_boosting,random_forest,svm,svm_linear}
-  -f EMBEDDINGFILE, --embeddingfile EMBEDDINGFILE
-  -d DIMENSION, --dimension DIMENSION
-  --tokenizer {glove,nltk}
-  -s SEED, --seed SEED
-  --folds FOLDS
-  --estimators ESTIMATORS
-  --loss LOSS
-  --kernel KERNEL
-  --class_weight CLASS_WEIGHT
-```
-
 - TF-IDF based models - **tfidf.py**
 ```
 usage: tfidf.py [-h] -m
@@ -70,19 +52,6 @@ usage: tfidf.py [-h] -m
                 [--use-inverse-doc-freq]
 
 TF-IDF model for twitter Hate speech detection
-
-optional arguments:
-  -h, --help            show this help message and exit
-  -m {tfidf_svm,tfidf_svm_linear,tfidf_logistic,tfidf_gradient_boosting,tfidf_random_forest}, --model {tfidf_svm,tfidf_svm_linear,tfidf_logistic,tfidf_gradient_boosting,tfidf_random_forest}
-  --max_ngram MAX_NGRAM
-  --tokenizer {glove,nltk}
-  -s SEED, --seed SEED
-  --folds FOLDS
-  --estimators ESTIMATORS
-  --loss LOSS
-  --kernel KERNEL
-  --class_weight CLASS_WEIGHT
-  --use-inverse-doc-freq
 ```
 
 - LSTM(RNN) based methods - **lstm.py**
@@ -94,23 +63,6 @@ usage: lstm.py [-h] -f EMBEDDINGFILE -d DIMENSION --tokenizer {glove,nltk}
                {random,glove} [--learn-embeddings] [--scale-loss-function]
 
 LSTM based models for twitter Hate speech detection
-
-optional arguments:
-  -h, --help            show this help message and exit
-  -f EMBEDDINGFILE, --embeddingfile EMBEDDINGFILE
-  -d DIMENSION, --dimension DIMENSION
-  --tokenizer {glove,nltk}
-  --loss LOSS
-  --optimizer OPTIMIZER
-  --epochs EPOCHS
-  --batch-size BATCH_SIZE
-  -s SEED, --seed SEED
-  --folds FOLDS
-  --kernel KERNEL
-  --class_weight CLASS_WEIGHT
-  --initialize-weights {random,glove}
-  --learn-embeddings
-  --scale-loss-function
 ```
 
 - CNN based models - **cnn.py**
@@ -122,22 +74,6 @@ usage: cnn.py [-h] -f EMBEDDINGFILE -d DIMENSION --tokenizer {glove,nltk}
               {random,glove} [--learn-embeddings] [--scale-loss-function]
 
 CNN based models for twitter Hate speech detection
-
-optional arguments:
-  -h, --help            show this help message and exit
-  -f EMBEDDINGFILE, --embeddingfile EMBEDDINGFILE
-  -d DIMENSION, --dimension DIMENSION
-  --tokenizer {glove,nltk}
-  --loss LOSS
-  --optimizer OPTIMIZER
-  --epochs EPOCHS
-  --batch-size BATCH_SIZE
-  -s SEED, --seed SEED
-  --folds FOLDS
-  --class_weight CLASS_WEIGHT
-  --initialize-weights {random,glove}
-  --learn-embeddings
-  --scale-loss-function
 ```
 
 
